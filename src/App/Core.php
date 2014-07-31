@@ -15,10 +15,15 @@ class Core  {
     protected $public_path;
     protected $storage_path;
     protected $debug;
+    protected $core_instance;
+    protected $database_config;
+    protected $database_connection;
+    protected $queue_connection;
+
 
     public function __construct()
     {
-        $this->app = new Application();
+        $this->app = new \Silex\Application();
         $this->filesystem = new Filesystem();
     }
 
@@ -38,9 +43,14 @@ class Core  {
         return $this->app;
     }
 
-    public function setEnv($env)
+    public function setEnv($env = null)
     {
-        $this->env = $env;
+        if(null == $env) {
+            $env = include($this->getAppPath() . '/../.env_boot.php');
+            $this->env = $env;
+        } else {
+            $this->env = $env;
+        }
         return $this;
     }
 
@@ -48,6 +58,31 @@ class Core  {
     {
         return $this->env;
     }
+
+    public function getDatabaseConfig()
+    {
+        return $this->database_config;
+    }
+
+    public function setDatabaseConfig($path_and_file = null)
+    {
+        if(null === $path_and_file)
+        {
+            $env = $this->getEnvWithTrailingSlash();
+            $config = require_once $this->getAppPath() . '/config/' . $env . 'database.php';
+            $this->database_config = $config;
+        } else {
+            $this->database_config = $path_and_file;
+        }
+        return $this;
+    }
+
+    public function getEnvWithTrailingSlash()
+    {
+        $env = (null == $this->getEnv()) ? '' : $this->getEnv() . '/';
+        return $env;
+    }
+
 
     /**
      * @return mixed
@@ -135,4 +170,41 @@ class Core  {
         }
     }
 
+    public function setCoreInstance($core)
+    {
+        $this->core_instance = $core;
+    }
+
+    public function getCoreInstance()
+    {
+        return $this->core_instance;
+    }
+
+    public function setQueueLogging()
+    {
+        if(!$this->getFilesystem()->exists($this->getStoragePath() . '/logs/core_queue.log'))
+        {
+            $this->getFilesystem()->dumpFile($this->getStoragePath() . '/logs/core_queue.log', '');
+        }
+        $this->getApp()->register(new \Silex\Provider\MonologServiceProvider(), array(
+            'monolog.logfile' => $this->getStoragePath() . '/logs/core_queue.log',
+        ));
+    }
+
+    public function setDatabaseConnection($database_connection = null)
+    {
+        if(null === $database_connection)
+        {
+            $database_connection = require_once $this->getAppPath() . '/config/' . $this->getEnvWithTrailingSlash() . 'database.php';
+            $this->database_connection = $database_connection;
+        } else {
+            $this->database_connection = $database_connection;
+        }
+        return $this;
+    }
+
+    public function getDatabaseConnection()
+    {
+        return $this->database_connection;
+    }
 }
