@@ -15,7 +15,7 @@
         "php": ">=5.3",
         "silex/silex": "2.0.*@dev",
         "monolog/monolog": ">=1.0.0",
-        "vlucas/phpdotenv": "dev-master",
+        "vlucas/phpdotenv": "1.0.*",
         "league/fractal": "0.9.*",
         "aws/aws-sdk-php": "2.*",
         "davedevelopment/phpmig": "1.1.*@dev",
