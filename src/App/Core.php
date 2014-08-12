@@ -182,12 +182,12 @@ class Core  {
 
     public function setQueueLogging()
     {
-        if(!$this->getFilesystem()->exists($this->getStoragePath() . '/logs/core_queue.log'))
+        if(!$this->getFilesystem()->exists($this->getStoragePath() . '/logs/core.log'))
         {
-            $this->getFilesystem()->dumpFile($this->getStoragePath() . '/logs/core_queue.log', '');
+            $this->getFilesystem()->dumpFile($this->getStoragePath() . '/logs/core.log', '');
         }
         $this->getApp()->register(new \Silex\Provider\MonologServiceProvider(), array(
-            'monolog.logfile' => $this->getStoragePath() . '/logs/core_queue.log',
+            'monolog.logfile' => $this->getStoragePath() . '/logs/core.log',
         ));
     }
 
