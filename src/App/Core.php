@@ -19,6 +19,8 @@ class Core  {
     protected $database_config;
     protected $database_connection;
     protected $queue_connection;
+    protected $testing;
+    protected $salt;
 
 
     public function __construct()
@@ -57,6 +59,17 @@ class Core  {
     public function getEnv()
     {
         return $this->env;
+    }
+
+    public function setTesting($testing = false)
+    {
+        $this->testing = $testing;
+        return $this;
+    }
+
+    public function getTesting()
+    {
+        return $this->testing;
     }
 
     public function getDatabaseConfig()
@@ -206,5 +219,16 @@ class Core  {
     public function getDatabaseConnection()
     {
         return $this->database_connection;
+    }
+
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+        return $this;
+    }
+
+    public function getSalt()
+    {
+        return $this->salt;
     }
 }
